@@ -1,16 +1,8 @@
-#import arcpy
 import urllib
 import urllib2
 import httplib
 import json
 import contextlib
-
-
-user_file = open('C:\coding\Python\GIS\username.txt', 'r')
-username = user_file.readline().rstrip('\n')
-pass_file = open('C:\coding\Python\GIS\password.txt', 'r')
-password = pass_file.readline().rstrip('\n')
-service_url = "https://arcgis.com/sharing"
 
 
 def submit_request(request):
@@ -19,7 +11,7 @@ def submit_request(request):
         job_info = json.load(response)
         return job_info
 
-def get_token(service_url, username, password):
+def return_token(service_url, username, password):
     """ Returns an authentication token for use in ArcGIS Online."""
 
     # Set the username and password parameters before
@@ -41,7 +33,6 @@ def get_token(service_url, username, password):
         return token
     else:
         # Request for token must be made through HTTPS.
-        #
         if "error" in token_response:
             error_mess = token_response.get("error", {}).get("message")
             if "This request needs to be made over https." in error_mess:
@@ -50,6 +41,3 @@ def get_token(service_url, username, password):
                 return token
             else:
                 raise Exception("AGOL error: {} ".format(error_mess))
-
-agol_token = get_token(service_url, username, password)
-print agol_token
